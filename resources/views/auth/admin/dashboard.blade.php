@@ -1,0 +1,7 @@
+@extends('auth.admin.base')
+@push('style')
+@endpush
+@section('content')
+@endsection
+@push('script')
+@endpush
