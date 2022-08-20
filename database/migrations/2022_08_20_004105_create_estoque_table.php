@@ -13,11 +13,15 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('produtos', function (Blueprint $table) {
+        Schema::create('estoque', function (Blueprint $table) {
             $table->id();
-            $table->string('codigo', 50)->nullable(true);
-            $table->string('nome', 255);
-            $table->string('descricao', 500);
+            //
+            $table->unsignedBigInteger('produto_especificacao_id');
+            $table->foreign('produto_especificacao_id')->references('id')->on('produto_especificacao');
+            //
+            $table->integer('quantidade');
+            $table->integer('maximo')->nullable(true);
+            $table->integer('minimo');
             $table->softDeletes();
             $table->timestamps();
         });
@@ -30,6 +34,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('produtos');
+        Schema::dropIfExists('estoque');
     }
 };

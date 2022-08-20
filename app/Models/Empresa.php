@@ -6,11 +6,11 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Sistema extends Model
+class Empresa extends Model
 {
     use HasFactory, SoftDeletes;
 
-    protected $table = 'sistema';
+    protected $table = 'empresa';
     protected $hidden = [
         'created_at',
         'updated_at',
