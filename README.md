@@ -85,7 +85,7 @@ Projeto ainda não tem uma versão
 
 ## ✒️ Autores
 
-Aqueles que ajudaram ajudaram o projeto
+Aqueles que ajudaram o projeto
 
 * **Guilherme Araujo** - *Trabalho Inicial* - [Github](https://github.com/gui1535)
 
