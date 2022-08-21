@@ -16,6 +16,8 @@ class DatabaseSeeder extends Seeder
     {
         $this->call(RotasSeeder::class);
         $this->call(UserSeeder::class);
-        $this->call(ContatoSeeder::class);
+        $this->call(ContatoUsuarioSeeder::class);
+        $this->call(MedidasSeeder::class);
+        $this->call(PesosSeeder::class);
     }
 }

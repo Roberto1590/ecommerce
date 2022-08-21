@@ -32,6 +32,7 @@
                     <span class="bx bx-message-alt-add"></span>&nbsp; Novo
                 </button>
             </a>
+            
         </div>
     </div>
 

@@ -32,7 +32,7 @@ class UsuarioCreateUpdateRequest extends FormRequest
             'telefone_celular'   => 'required|celular_com_ddd',
             'sexo'               => 'required|verifica_bool',
             'telefone_comercial' => 'required|telefone_com_ddd',
-            'cpf'                => 'required|cpf|unique:contato,cpf',
+            'cpf'                => 'required|cpf|unique:contato_usuario,cpf',
         ];
     }
 

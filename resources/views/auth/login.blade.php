@@ -28,12 +28,7 @@
                 <div class="col-sm-10 col-md-8 col-lg-6 mx-auto d-table h-100">
                     <div class="d-table-cell align-middle">
 
-                        <div class="text-center mt-4">
-                            <h1 class="h2">Welcome back, Charles</h1>
-                            <p class="lead">
-                                Sign in to your account to continue
-                            </p>
-                        </div>
+                        LOGIN
 
                         <div class="card">
                             <div class="card-body">

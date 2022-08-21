@@ -1,11 +1,227 @@
 @extends('auth.admin.base')
 @push('style')
-    <link rel="stylesheet" href="{{ asset('vendor/sweetalert2/dist/sweetalert2.min.css') }}">
+    {{-- <link rel="stylesheet" href="{{ asset('vendor/sweetalert2/dist/sweetalert2.min.css') }}"> --}}
+    {{-- <link rel='stylesheet' href='https://unpkg.com/filepond-plugin-image-preview/dist/filepond-plugin-image-preview.min.css'>
+    <link rel='stylesheet' href='https://unpkg.com/filepond/dist/filepond.min.css'> --}}
+    <link rel="stylesheet" href="{{ asset('plugins/filepond/css/filepond-plugin-image-preview.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('plugins/filepond/css/filepond.min.css') }}">
+    <style>
+        /* Wizard */
+        .wizard a:hover {
+            text-decoration: none;
+        }
+
+        .wizard .audible {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border: 0;
+        }
+
+        .wizard .steps>ul {
+            list-style: none;
+            padding-left: 0;
+            display: -webkit-box;
+            display: flex;
+            -webkit-box-pack: justify;
+            justify-content: space-between;
+            margin-bottom: 0;
+        }
+
+        .wizard .steps>ul li {
+            width: 270px;
+            max-width: calc(25% - 6px);
+        }
+
+        .wizard .steps>ul li a {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            /* width: 100%;
+                                    height: 100%; */
+            border-top-left-radius: 10px;
+            border-top-right-radius: 10px;
+            background-color: rgba(153, 155, 163, 0.1);
+            padding: 20px 35px;
+        }
+
+        @media (max-width: 767px) {
+            .wizard .steps>ul li a {
+                padding: 15px 10px;
+            }
+        }
+
+        .media {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        @media (max-width: 767px) {
+            .wizard .steps>ul li a .media {
+                display: block;
+            }
+        }
+
+        .bd-wizard-step-icon {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .wizard .steps>ul li .bd-wizard-step-icon {
+            width: 34px;
+            height: 34px;
+            border-radius: 4px;
+            background-color: #e1e1e1;
+            font-size: 14px;
+            line-height: 34px;
+            text-align: center;
+            color: #4a2950;
+            margin-right: 11px;
+        }
+
+        @media (max-width: 767px) {
+            .wizard .steps>ul li .bd-wizard-step-icon {
+                margin: 0 auto;
+            }
+        }
+
+        .wizard .steps>ul li .bd-wizard-step-title {
+            line-height: 1;
+            font-size: 18px;
+            font-weight: bold;
+            color: #000000;
+        }
+
+        @media (max-width: 767px) {
+            .wizard .steps>ul li .bd-wizard-step-title {
+                display: none;
+            }
+        }
+
+        .wizard .steps>ul li .bd-wizard-step-subtitle {
+            line-height: 1;
+            font-size: 14px;
+            color: #c8c8c8;
+        }
+
+        @media (max-width: 767px) {
+            .wizard .steps>ul li .bd-wizard-step-subtitle {
+                display: none;
+            }
+        }
+
+        .wizard .steps>ul li.current .bd-wizard-step-icon,
+        .wizard .steps>ul li.done .bd-wizard-step-icon {
+            background-color: #696cff;
+            color: #fff;
+        }
+
+        .wizard .steps>ul li.current a {
+            background-color: #fff;
+        }
+
+        .wizard .content {
+            padding: 30px 35px 20px 35px;
+            background-color: #fff;
+        }
+
+        @media (max-width: 767px) {
+            .wizard .content {
+                padding-left: 20px;
+                padding-right: 20px;
+                min-height: auto;
+            }
+        }
+
+        .wizard .content .title {
+            display: none;
+        }
+
+        .wizard .content .content-wrapper {
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .wizard .content .section-heading {
+            font-weight: bold;
+            color: #030303;
+            margin-bottom: 22px;
+        }
+
+        .wizard .content p {
+            font-size: 16px;
+            color: #030303;
+        }
+
+        .wizard .actions {
+            padding: 0 35px;
+            background-color: #fff;
+        }
+
+        @media (max-width: 767px) {
+            .wizard .actions {
+                padding-left: 20px;
+                padding-right: 20px;
+            }
+        }
+
+        .wizard .actions>ul {
+            list-style: none;
+            padding-left: 0;
+            /* display: -webkit-box; */
+            display: flex;
+            /* -webkit-box-pack: end; */
+            justify-content: flex-end;
+            /* max-width: 700px; */
+            margin-left: auto;
+            margin-right: auto;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #f5f5f4;
+        }
+
+        .wizard .actions li a {
+            display: inline-block;
+            border-radius: 6px;
+            /* background-color: #696cff; */
+            padding: 10px 25px;
+            /* color: #fff; */
+            font-style: 15px;
+            font-weight: bold;
+        }
+
+        .wizard .actions li.disabled {
+            display: none;
+        }
+
+        .wizard .actions li:not(.disabled)+li,
+        .wizard .actions li:not(:first-child):last-child {
+            margin-left: 15px;
+        }
+    </style>
 @endpush
 @section('content')
     @if (session()->has('msgSuccess'))
         <div class="alert alert-success alert-dismissible" role="alert">
             {{ session()->get('msgSuccess') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    @endif
+    @if ($errors->any())
+        <div class="alert alert-danger alert-dismissible" role="alert">
+            <ul>
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
     @endif
@@ -22,176 +238,247 @@
             </button>
         </a>
     </div>
-    <div class="nav-align-top mb-4">
-        <div class="row">
-            <div class="col-4">
-                <ul class="nav nav-pills mb-3 nav-fill" role="tablist">
-
-                    <li class="nav-item">
-                        <button type="button" class="nav-link active" role="tab" data-bs-toggle="tab"
-                            data-bs-target="#navs-pills-justified-home" aria-controls="navs-pills-justified-home"
-                            aria-selected="true">
-                            <i class="tf-icons bx bx-user"></i>
-                            Dados do Produto
-                        </button>
-                    </li>
-                    <li class="nav-item">
-                        <button type="button" class="nav-link" role="tab" data-bs-toggle="tab"
-                            data-bs-target="#navs-pills-justified-profile" aria-controls="navs-pills-justified-profile"
-                            aria-selected="false">
-                            <i class="tf-icons bx bx-user"></i>
-                            Estoque
-                        </button>
-                    </li>
-
-                </ul>
-            </div>
-        </div>
-        <div class="tab-content">
-            <div class="tab-pane fade show active" id="navs-pills-justified-home" role="tabpanel">
-                <form id="formInserir" action="{{ route('auth.post.dashboard.gerenciamento.usuarios') }}" method="POST"
-                    enctype="multipart/form-data">
-                    @csrf
-                    <div class="card mb-4">
-                        <h5 class="card-header">Dados do Produto</h5>
-                        <div class="card-body">
-                            <div class="d-flex align-items-start align-items-sm-center gap-4">
-                                <img src="../../{{ config('constants.produtos.path_sem_foto') }}" alt="Foto Produto"
-                                    class="d-block rounded" height="100" width="100" id="uploadFoto" />
-
-                                <div class="button-wrapper">
-                                    <label for="imagem" class="btn btn-primary me-2 mb-4" tabindex="0">
-                                        <span class="d-none d-sm-block">Upload de foto</span>
-                                        <i class="bx bx-upload d-block d-sm-none"></i>
-                                        <input type="file" id="imagem" name="imagem" class="account-file-input"
-                                            hidden accept="image/png, image/jpeg" value="{{ old('imagem') }}" />
-                                    </label>
-                                    <button type="button"
-                                        class="btn btn-outline-secondary reset_img_perfil account-image-reset mb-4">
-                                        <i class="bx bx-reset d-block d-sm-none"></i>
-                                        <span class="d-none d-sm-block">Resetar Foto</span>
-                                    </button>
-
-                                    <p class="text-muted mb-0">Suporte JPG, GIF or PNG. Maximo de 1200kb</p>
-                                </div>
-                            </div>
-                            @error('imagem')
-                                <span class="error">
-                                    {{ $message }}
-                                </span>
-                            @enderror
-                        </div>
-                        <hr class="my-0" />
-                        <div class="card-body">
-                            <div class="row">
-                                <div class="mb-3 col-md-6">
-                                    <label for="nome" class="form-label">Nome</label>
-                                    <input class="form-control" type="text" id="nome" name="nome"
-                                        placeholder="Seu nome" autofocus value="{{ old('nome') }}" />
-                                    @error('nome')
-                                        <span class="error">
-                                            {{ $message }}
-                                        </span>
-                                    @enderror
-                                </div>
-                                <div class="mb-3 col-md-6">
-                                    <label for="email" class="form-label">Email</label>
-                                    <input class="form-control" type="email" name="email" id="email"
-                                        placeholder="Seu email" value="{{ old('email') }}" />
-                                    @error('email')
-                                        <span class="error">
-                                            {{ $message }}
-                                        </span>
-                                    @enderror
-                                </div>
-                                <div class="mb-3 col-md-6">
-                                    <label for="cpf" class="form-label">CPF</label>
-                                    <input class="form-control" type="text" id="cpf" name="cpf"
-                                        data-mask="000.000.000-00" placeholder="123.456.789-12"
-                                        value="{{ old('cpf') }}" />
-                                    @error('cpf')
-                                        <span class="error">
-                                            {{ $message }}
-                                        </span>
-                                    @enderror
-                                </div>
-                                <div class="mb-3 col-md-6">
-                                    <label for="sexo" class="form-label">Sexo</label>
-                                    <select id="sexo" name="sexo" class="select2 form-select">
-                                        <option value="">Selecione o Sexo</option>
-                                        <option {{ old('sexo') == '0' ? 'selected' : '' }} value="0">
-                                            Masculino</option>
-                                        <option {{ old('sexo') == '1' ? 'selected' : '' }} value="1">Feminino
-                                        </option>
-                                    </select>
-                                    @error('sexo')
-                                        <span class="error">
-                                            {{ $message }}
-                                        </span>
-                                    @enderror
-                                </div>
-                                <div class="mb-3 col-md-6">
-                                    <label for="telefone_comercial" class="form-label">Telefone Comercial</label>
-                                    <div class="input-group input-group-merge">
-                                        <span class="input-group-text">BR (+55)</span>
-                                        <input data-mask="(00) 0000-0000" type="text" id="telefone_comercial"
-                                            name="telefone_comercial" value="{{ old('telefone_comercial') }}"
-                                            class="form-control" placeholder="(11) 1234-5678" />
-                                    </div>
-                                    @error('telefone_comercial')
-                                        <span class="error">
-                                            {{ $message }}
-                                        </span>
-                                    @enderror
-                                </div>
-                                <div class="mb-3 col-md-6">
-                                    <label for="telefone_celular" class="form-label">Telefone Celular</label>
-                                    <div class="input-group input-group-merge">
-                                        <span class="input-group-text">BR (+55)</span>
-                                        <input data-mask="(00) 0000-0000" type="text" id="telefone_celular"
-                                            name="telefone_celular" value="{{ old('telefone_celular') }}"
-                                            class="form-control" placeholder="(11) 91234-5678" />
-                                    </div>
-                                    @error('telefone_celular')
-                                        <span class="error">
-                                            {{ $message }}
-                                        </span>
-                                    @enderror
-                                </div>
-                            </div>
-                            <div class="mt-2">
-                                <button type="submit" class="btn btn-primary me-2">Salvar</button>
-                                <button type="reset" class="btn btn-outline-secondary">Cancelar</button>
-                            </div>
-
+    <div class="container">
+        <form id="wizard" action="" method="POST">
+            @csrf
+            <h3>
+                <div class="media">
+                    <div class="bd-wizard-step-icon">
+                        <i class='bx bx-package'></i>
+                    </div>
+                    <div class="media-body">
+                        <div class="bd-wizard-step-title mt-3">Dados Produto</div>
+                    </div>
+                </div>
+            </h3>
+            <section>
+                <h4 class="section-heading">Insira os dados do produto</h4>
+                <div class="row">
+                    <div class="mb-3 col-md-6">
+                        <label for="nome" class="form-label">Codigo</label>
+                        <input class="form-control" maxlength="50" type="text" id="codigo" name="codigo"
+                            placeholder="Codigo" autofocus value="{{ old('codigo') }}" />
+                    </div>
+                    <div class="mb-3 col-md-6">
+                        <label for="nome" class="form-label">* Nome</label>
+                        <input class="form-control" maxlength="254" type="text" id="nome" name="nome"
+                            placeholder="Nome" required autofocus value="{{ old('nome') }}" />
+                    </div>
+                    <div class="mb-3 col-md-12">
+                        <label for="descricao" class="form-label">* Descrição</label>
+                        <textarea id="descricao" required name="descricao" class="form-control">{{ old('descricao') }}</textarea>
+                    </div>
+                </div>
+            </section>
+            <h3>
+                <div class="media">
+                    <div class="bd-wizard-step-icon">
+                        <i class='bx bx-images'></i>
+                    </div>
+                    <div class="media-body">
+                        <div class="bd-wizard-step-title mt-3">Imagens</div>
+                    </div>
+                </div>
+            </h3>
+            <section>
+                <h4 class="section-heading">Insira as imagens do produto</h4>
+                <p class="fs-6">Máximo de Imagens: <span class="text-warning">10</span></p>
+                <div class="row">
+                    <input type="file" id="filepond" class="filepond" name="imagem[]" multiple data-max-file-size="3MB"
+                        data-max-files="10" />
+                </div>
+            </section>
+            <h3>
+                <div class="media">
+                    <div class="bd-wizard-step-icon">
+                        <i class='bx bx-help-circle'></i>
+                    </div>
+                    <div class="media-body">
+                        <div class="bd-wizard-step-title mt-3">Especificações</div>
+                    </div>
+                </div>
+            </h3>
+            <section>
+                <h4 class="section-heading">Insira as especificações do produto</h4>
+                <div class="row mb-2">
+                    <div class="mb-3 col-md-3">
+                        <label for="categoria" class="form-label">* Categoria</label>
+                        <select id="categoria" name="categoria" class="select2 form-select">
+                            <option>Selecione a Categoria</option>
+                            @foreach ($categorias as $cat)
+                                <option {{ old('categoria') == $cat->id ? 'selected' : '' }} value="{{ $cat->id }}">
+                                    {{ $cat->nome }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="mb-3 col-md-3">
+                        <label for="marca" class="form-label">* Marca</label>
+                        <select id="marca" name="marca" class="select2 form-select">
+                            <option>Selecione a Marca</option>
+                            @foreach ($marcas as $mrc)
+                                <option {{ old('marca') == $mrc->id ? 'selected' : '' }} value="{{ $mrc->id }}">
+                                    {{ $mrc->nome }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="mb-3 col-md-3">
+                        <label for="preco_custo" class="form-label">* Preço de Custo</label>
+                        <input class="form-control" maxlength="254" type="text" id="preco_custo" name="preco_custo"
+                            placeholder="Preço de Custo" required value="{{ old('preco_custo') }}" />
+                    </div>
+                    <div class="mb-3 col-md-3">
+                        <label for="preco_venda" class="form-label">* Preço de Venda</label>
+                        <input class="form-control" maxlength="254" type="text" id="preco_venda" name="preco_venda"
+                            placeholder="Preço de Venda" required value="{{ old('preco_venda') }}" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="mb-3 col-md-3">
+                        <label for="peso" class="form-label">Peso</label>
+                        <div class="input-group">
+                            <input class="form-control" name="peso" type="number" min="0" maxlength="30"
+                                value="{{ old('peso') }}" id="peso">
+                            <select id="peso_tipo" name="peso_tipo" class="select2 form-select">
+                                {{-- <option>Selecione o Pre</option> --}}
+                                @foreach ($pesos as $pes)
+                                    <option {{ old('peso_tipo') == $pes->sigla ? 'selected' : '' }}
+                                        value="{{ $pes->sigla }}">
+                                        {{ $pes->peso }}
+                                    </option>
+                                @endforeach
+                            </select>
                         </div>
                     </div>
-                </form>
-            </div>
-            <div class="tab-pane fade" id="navs-pills-justified-profile" role="tabpanel">
-                <p>
-                    Donut dragée jelly pie halvah. Danish gingerbread bonbon cookie wafer candy oat cake ice
-                    cream. Gummies halvah tootsie roll muffin biscuit icing dessert gingerbread. Pastry ice cream
-                    cheesecake fruitcake.
-                </p>
-                <p class="mb-0">
-                    Jelly-o jelly beans icing pastry cake cake lemon drops. Muffin muffin pie tiramisu halvah
-                    cotton candy liquorice caramels.
-                </p>
-            </div>
-            <div class="tab-pane fade" id="navs-pills-justified-messages" role="tabpanel">
-                <p>
-                    Oat cake chupa chups dragée donut toffee. Sweet cotton candy jelly beans macaroon gummies
-                    cupcake gummi bears cake chocolate.
-                </p>
-                <p class="mb-0">
-                    Cake chocolate bar cotton candy apple pie tootsie roll ice cream apple pie brownie cake. Sweet
-                    roll icing sesame snaps caramels danish toffee. Brownie biscuit dessert dessert. Pudding jelly
-                    jelly-o tart brownie jelly.
-                </p>
-            </div>
-        </div>
+                    <div class="mb-3 col-md-3">
+                        <label for="altura" class="form-label">Altura</label>
+                        <div class="input-group">
+                            <input class="form-control" name="altura" type="number" min="0" maxlength="30"
+                                value="{{ old('altura') }}" id="altura">
+                            <select id="altura_tipo" name="altura_tipo" class="select2 form-select">
+                                @foreach ($medidas as $med)
+                                    <option {{ old('altura_tipo') == $med->sigla ? 'selected' : '' }}
+                                        value="{{ $med->sigla }}">
+                                        {{ $med->medida }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+                    <div class="mb-3 col-md-3">
+                        <label for="largura" class="form-label">Largura</label>
+                        <div class="input-group">
+                            <input class="form-control" name="largura" type="number" min="0" maxlength="30"
+                                value="{{ old('largura') }}" id="largura">
+                            <select id="largura_tipo" name="largura_tipo" class="select2 form-select">
+                                @foreach ($medidas as $med)
+                                    <option {{ old('largura_tipo') == $med->sigla ? 'selected' : '' }}
+                                        value="{{ $med->sigla }}">
+                                        {{ $med->medida }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+                    <div class="mb-3 col-md-3">
+                        <label for="comprimento" class="form-label">Comprimento</label>
+                        <div class="input-group">
+                            <input class="form-control" name="comprimento" type="number" min="0" maxlength="30"
+                                value="{{ old('comprimento') }}" id="comprimento">
+                            <select id="comprimento_tipo" name="comprimento_tipo" class="select2 form-select">
+                                @foreach ($medidas as $med)
+                                    <option {{ old('comprimento_tipo') == $med->sigla ? 'selected' : '' }}
+                                        value="{{ $med->sigla }}">
+                                        {{ $med->medida }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+                    <div class="mb-3 col-md-12">
+                        <div class="form-check form-switch mb-2">
+                            <input class="form-check-input" checked type="checkbox" name="destaque" id="destaque">
+                            <label class="form-check-label" for="destaque">
+                                Destaque
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <h3>
+                <div class="media">
+                    <div class="bd-wizard-step-icon">
+                        <i class='bx bxs-shopping-bag-alt'></i>
+                    </div>
+                    <div class="media-body">
+                        <div class="bd-wizard-step-title mt-3">Estoque</div>
+                    </div>
+                </div>
+            </h3>
+            <section>
+                <h4 class="section-heading">Insira os dados para o controle do estoque</h4>
+                <div class="row">
+                    <div class="mb-3 col-md-4">
+                        <label for="quantidade" class="form-label">* Quantidade</label>
+                        <input class="form-control" maxlength="100" type="number" min="0" id="quantidade"
+                            name="quantidade" placeholder="Quantidade" required value="{{ old('quantidade') }}" />
+                    </div>
+                    <div class="mb-3 col-md-4">
+                        <label for="minimo" class="form-label">* Quantidade Minima</label>
+                        <input class="form-control" maxlength="100" type="number" min="0" id="minimo"
+                            name="minimo" placeholder="Quantidade Minima" required value="{{ old('minimo') }}" />
+                    </div>
+                    <div class="mb-3 col-md-4">
+                        <label for="maximo" class="form-label">* Quantidade Maxima</label>
+                        <input class="form-control" maxlength="100" type="number" min="0" id="maximo"
+                            name="maximo" placeholder="Quantidade Maxima" required value="{{ old('maximo') }}" />
+                    </div>
+                    <div class="mb-3 col-md-12">
+                        <div class="form-check form-switch mb-2">
+                            <input class="form-check-input" checked type="checkbox" name="notificar" id="notificar">
+                            <label class="form-check-label" for="notificar">
+                                Notificar-me
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </form>
     </div>
 @endsection
 @push('script')
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
+    <script src="{{ asset('plugins/jquery-steps/jquery.steps.min.js') }}"></script>
+    <script src="{{ asset('plugins/filepond/js/filepond.min.js') }}"></script>
+    <script src="{{ asset('plugins/filepond/js/filepond-plugin-image-preview.min.js') }}"></script>
+    <script>
+        //Wizard Init
+        $("#wizard").steps({
+            headerTag: "h3",
+            bodyTag: "section",
+            transitionEffect: "none",
+            titleTemplate: '#title#'
+        });
+
+        $("a[href='#previous']").addClass('btn btn-secondary')
+        $("a[href='#next']").addClass('btn btn-primary')
+        $("a[href='#finish']").addClass('btn btn-success')
+
+        // We want to preview images, so we need to register the Image Preview plugin
+        FilePond.registerPlugin(
+            FilePondPluginImagePreview,
+
+        );
+        $('#preco_custo').mask('#.##0.00', {
+            reverse: true
+        });
+        $('#preco_venda').mask('#.##0.00', {
+            reverse: true
+        });
+        // Select the file input and use create() to turn it into a pond
+        FilePond.create(
+            document.getElementById('filepond')
+        );
+    </script>
 @endpush

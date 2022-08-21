@@ -3,10 +3,11 @@
 namespace Database\Seeders;
 
 use App\Models\Contato;
+use App\Models\ContatoUsuario;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
-class ContatoSeeder extends Seeder
+class ContatoUsuarioSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -15,7 +16,7 @@ class ContatoSeeder extends Seeder
      */
     public function run()
     {
-        Contato::factory()->create([
+        ContatoUsuario::factory()->create([
             'user_id' => 1,
             'cpf' => '44377811231',
             'telefone_comercial' => '11945221512',

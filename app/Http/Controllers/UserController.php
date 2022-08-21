@@ -6,6 +6,7 @@ use App\Http\Requests\UsuarioCreateUpdateRequest;
 use App\Http\Requests\UsuarioSenhaUpdateRequest;
 use App\Http\Requests\UsuarioUpdateRequest;
 use App\Models\Contato;
+use App\Models\ContatoUsuario;
 use App\Models\User;
 use Exception;
 use Illuminate\Support\Facades\File;
@@ -18,7 +19,7 @@ class UserController extends Controller
     public function index(Request $request)
     {
 
-        $usuario = Contato::where('user_id', '<>', auth()->user()->id)->get();
+        $usuario = ContatoUsuario::where('user_id', '<>', auth()->user()->id)->get();
         foreach ($usuario as $user) {
             $user->usuario;
         }
@@ -33,8 +34,8 @@ class UserController extends Controller
 
     public function indexUpdate(Request $request)
     {
-        $usuario  = Contato::where('user_id', $request->id)->first();
-        if (!$usuario) {
+        $usuario  = ContatoUsuario::where('user_id', $request->id)->first();
+        if (!$usuario || $usuario->user_id == auth()->user()->id) {
             return false;
         }
         $usuario->usuario;
@@ -65,7 +66,7 @@ class UserController extends Controller
         }
 
         // Inserindo Contato do User
-        $contato                     = new Contato();
+        $contato                     = new ContatoUsuario();
         $contato->user_id            = $usuario->id;
         $contato->cpf                = $request->cpf;
         $contato->sexo               = $request->sexo;
@@ -79,7 +80,7 @@ class UserController extends Controller
 
     public function get($id)
     {
-        $contato = Contato::find($id);
+        $contato = ContatoUsuario::find($id);
         if (!$contato) {
             return false;
         }
@@ -112,7 +113,7 @@ class UserController extends Controller
         $usuario->save();
 
         // Inserindo Contato do User
-        $contato                     = Contato::where('user_id', $request->input('id'))->first();
+        $contato                     = ContatoUsuario::where('user_id', $request->input('id'))->first();
         $contato->cpf                = $request->input('cpf');
         $contato->telefone_comercial = $request->input('telefone_comercial');
         $contato->telefone_celular   = $request->input('telefone_celular');
@@ -137,19 +138,22 @@ class UserController extends Controller
 
     public function deletar(Request $request)
     {
-        try {
-            Contato::where('user_id', $request->id)->delete();
-            User::find($request->id)->delete();
-            //
-            return redirect()->back()->with('msgSuccess', 'Usuário deletado com sucesso');
-        } catch (Exception $e) {
-            throw new Exception($e->getMessage());
+
+        if ($request->id == auth()->user()->id) {
+            return false;
         }
+        ContatoUsuario::where('user_id', $request->id)->delete();
+        User::find($request->id)->delete();
+        //
+        return redirect()->back()->with('msgSuccess', 'Usuário deletado com sucesso');
     }
 
     public function restaurar(Request $request)
     {
-        Contato::where('user_id', $request->id)->restore();
+        if ($request->id == auth()->user()->id) {
+            return false;
+        }
+        ContatoUsuario::where('user_id', $request->id)->restore();
         User::where('id', $request->id)->restore();
         return redirect()->back()->with('msgSuccess', 'Usuário restaurado com sucesso');
     }

@@ -9,6 +9,8 @@ use App\Http\Requests\ProdutoCreateUpdateRequest;
 use App\Models\Categoria;
 use App\Models\CategoriasPai;
 use App\Models\Marcas;
+use App\Models\Medidas;
+use App\Models\Pesos;
 use App\Models\Produtos;
 use Exception;
 use Illuminate\Http\Request;
@@ -334,10 +336,11 @@ class ProdutoController extends Controller
      */
     public function indexInserirProduto()
     {
-        $marcas     = Marcas::all();
-        $categorias = Categoria::all();
-
-        return view('auth.admin.comercio.produto.inserir', compact('marcas', 'categorias'));
+        $marcas     = Marcas::orderBy('nome')->get();
+        $categorias = Categoria::orderBy('nome')->get();
+        $pesos      = Pesos::orderBy('sigla')->get();
+        $medidas    = Medidas::orderBy('sigla')->get();
+        return view('auth.admin.comercio.produto.inserir', compact('marcas', 'categorias', 'pesos', 'medidas'));
     }
 
     /**
