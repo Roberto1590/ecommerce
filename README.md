@@ -25,6 +25,12 @@ Clonando projeto:
 git clone https://github.com/gui1535/ecommerce.git
 ```
 
+Acesse a pasta do projeto:
+
+```
+cd ecommerce
+```
+
 Atualizando Composer e gerando arquivo .env:
 
 ```
